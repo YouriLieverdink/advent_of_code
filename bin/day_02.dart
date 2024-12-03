@@ -60,5 +60,5 @@ void main() {
     }
   }
 
-  print('n: $safe');
+  print('Safe reports: $safe');
 }

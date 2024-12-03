@@ -1,9 +1,8 @@
-import 'dart:io';
+import 'package:adventofcode_2024/utilities.dart';
 
 Future<void> main() async {
   // 1. Read the input.
-  final file = File('assets/day_01_input');
-  final lines = await file.readAsLines();
+  final lines = readFileAsLinesSync('assets/day_01_input');
 
   // 2. Create two lists, store the values in them.
   final (left, right) = (<int>[], <int>[]);
