@@ -90,10 +90,10 @@ String? get(
   List<List<String>> grid,
   (int, int) position,
 ) {
-  final (x, y) = position;
+  final (y, x) = position;
 
   try {
-    return grid[x][y];
+    return grid[y][x];
   } //
   on RangeError {
     return null;
