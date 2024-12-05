@@ -2,8 +2,8 @@ import 'dart:io';
 
 void main() {
   // 1. Read the input file.
-  final file = File('assets/day_05_input');
-  final lines = file.readAsLinesSync();
+  final lines = File('assets/day_05_input') //
+      .readAsLinesSync();
 
   // 2. Make a list of rules and manuals.
   final List<(int, int)> rules = [];
@@ -14,7 +14,7 @@ void main() {
 
     if (line.isEmpty) continue;
 
-    // Handle rules.
+    // Handle the lines with rules.
     if (line.contains('|')) {
       final [a, b] = line //
           .split('|')
@@ -24,7 +24,7 @@ void main() {
       rules.add((a, b));
     }
 
-    // Handle manuals.
+    // Handle the lines with manuals.
     if (line.contains(',')) {
       final manual = line //
           .split(',')
@@ -35,38 +35,35 @@ void main() {
     }
   }
 
-  // 3. Sum the center values of the correct manuals.
+  // 3. Sum the center element, only of the correct manuals.
   int partOne = 0;
 
   for (int i = 0; i < manuals.length; i++) {
     final manual = manuals[i];
 
-    // Check if `all` the rules are satisfied.
-    if (!satisfiesAll(manual, rules)) {
-      continue;
+    if (satisfiesAll(manual, rules)) {
+      final center = manual[manual.length ~/ 2];
+      partOne += center;
     }
-
-    final center = manual[manual.length ~/ 2];
-    partOne += center;
   }
 
-  // 4. Print the sum.
   print('Sum: $partOne');
 
-  // 5. Sum the center values of all manuals, make them correct if not already.
+  // 4. Sum the center element, only of the manuals that were corrected.
   int partTwo = 0;
 
   for (int i = 0; i < manuals.length; i++) {
     var manual = manuals[i];
 
-    // Check if `all` the rules are satisfied.
-    if (!satisfiesAll(manual, rules)) {
-      // Make the manual correct.
-      manual = correct(manual, rules);
-
-      final center = manual[manual.length ~/ 2];
-      partTwo += center;
+    if (satisfiesAll(manual, rules)) {
+      continue;
     }
+
+    // Make the manual correct, and then sum the center element.
+    manual = correct(manual, rules);
+
+    final center = manual[manual.length ~/ 2];
+    partTwo += center;
   }
 
   print('Sum: $partTwo');
@@ -111,6 +108,7 @@ bool applies(
 ) {
   final (a, b) = rule;
 
+  // A rule is only enforced if both pages are in the manual.
   return manual.contains(a) && manual.contains(b);
 }
 
@@ -118,6 +116,7 @@ List<int> correct(
   List<int> manual,
   List<(int, int)> rules,
 ) {
+  // Base case: the manual is correct.
   if (satisfiesAll(manual, rules)) {
     return manual;
   }
@@ -127,17 +126,21 @@ List<int> correct(
   for (int i = 0; i < rules.length; i++) {
     final rule = rules[i];
 
-    if (!satisfies(manual_, rule)) {
-      // Switch the positions of the two pages.
-      final (a, b) = rule;
-
-      final idxA = manual_.indexOf(a);
-      final idxB = manual_.indexOf(b);
-
-      manual_[idxA] = b;
-      manual_[idxB] = a;
+    // If the rule is already satisfied, skip it.
+    if (satisfies(manual_, rule)) {
+      continue;
     }
+
+    // Swap the pages.
+    final (a, b) = rule;
+
+    final idxA = manual_.indexOf(a);
+    final idxB = manual_.indexOf(b);
+
+    manual_[idxA] = b;
+    manual_[idxB] = a;
   }
 
+  // Recurse until the manual is correct.
   return correct(manual_, rules);
 }
