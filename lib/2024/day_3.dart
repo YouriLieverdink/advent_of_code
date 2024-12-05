@@ -5,7 +5,7 @@ final $dont = RegExp(r"don't\(\)");
 final $mul = RegExp(r"mul\((\d+),(\d+)\)");
 
 void main() {
-  final program = File('assets/day_03_input') //
+  final program = File('assets/2024/day_03_input') //
       .readAsStringSync();
 
   int partOne = 0;

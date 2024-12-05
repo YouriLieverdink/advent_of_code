@@ -2,7 +2,7 @@ import 'dart:io';
 
 Future<void> main() async {
   // 1. Read the input.
-  final lines = File('assets/day_01_input') //
+  final lines = File('assets/2024/day_01_input') //
       .readAsLinesSync();
 
   // 2. Create two lists, store the values in them.

@@ -38,8 +38,8 @@ enum Direction {
 
 void main() {
   // 1. Read the input file.
-  final file = File('assets/day_04_input');
-  final lines = file.readAsLinesSync();
+  final lines = File('assets/2024/day_04_input') //
+      .readAsLinesSync();
 
   // 2. Build a 2-dimensional array of characters.
   final List<List<String>> grid = [];
@@ -67,7 +67,7 @@ void main() {
     }
   }
 
-  print('Part one: $partOne.');
+  print('Part one: $partOne');
 
   // 4. Count the number of occurences of the shape `X` with `MAS` as letters.
   int partTwo = 0;
@@ -83,7 +83,7 @@ void main() {
     }
   }
 
-  print('Part two: $partTwo.');
+  print('Part two: $partTwo');
 }
 
 String? get(
