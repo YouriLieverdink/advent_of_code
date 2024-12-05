@@ -47,7 +47,7 @@ void main() {
     }
   }
 
-  print('Sum: $partOne');
+  print('Part one: $partOne');
 
   // 4. Sum the center element, only of the manuals that were corrected.
   int partTwo = 0;
@@ -66,7 +66,7 @@ void main() {
     partTwo += center;
   }
 
-  print('Sum: $partTwo');
+  print('Part two: $partTwo');
 }
 
 bool satisfiesAll(

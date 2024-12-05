@@ -1,4 +1,4 @@
-import 'package:adventofcode_2024/utilities.dart';
+import 'dart:io';
 
 bool isSafe(
   List<int> report,
@@ -24,7 +24,8 @@ bool isSafe(
 
 void main() {
   // 1. Read the input.
-  final lines = readFileAsLinesSync('assets/day_02_input');
+  final lines = File('assets/day_02_input') //
+      .readAsLinesSync();
 
   // 2. Parse the input.
   final reports = <List<int>>[];
@@ -38,13 +39,15 @@ void main() {
   }
 
   // 3. Loop through, and see which reports are safe.
-  int safe = 0;
+  int partOne = 0;
+  int partTwo = 0;
 
   for (int i = 0; i < reports.length; i++) {
     final report = reports[i];
 
     if (isSafe(reports[i])) {
-      safe++;
+      partOne++;
+      partTwo++;
       continue;
     }
 
@@ -54,11 +57,12 @@ void main() {
         ..removeAt(j);
 
       if (isSafe(report_)) {
-        safe++;
+        partTwo++;
         break;
       }
     }
   }
 
-  print('Safe reports: $safe');
+  print('Part one: $partOne');
+  print('Part two: $partTwo');
 }

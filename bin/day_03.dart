@@ -5,10 +5,11 @@ final $dont = RegExp(r"don't\(\)");
 final $mul = RegExp(r"mul\((\d+),(\d+)\)");
 
 void main() {
-  final file = File('assets/day_03_input');
-  final program = file.readAsStringSync();
+  final program = File('assets/day_03_input') //
+      .readAsStringSync();
 
-  int sum = 0;
+  int partOne = 0;
+  int partTwo = 0;
 
   // When starting, the `mul` instructions are enabled.
   bool enabled = true;
@@ -29,13 +30,18 @@ void main() {
     // See if there is a `mul()` match starting at index: i.
     final mulMatch = $mul.matchAsPrefix(program, i);
     if (mulMatch != null) {
-      // When `enabled` is false, we skip the `mul` instruction.
-      if (!enabled) continue;
+      // When enabled is `true`, we multiple for part two.
+      if (enabled) {
+        final [a, b] = mulMatch.groups([1, 2]);
+        partTwo += int.parse(a!) * int.parse(b!);
+      }
 
+      // We always multiple for part one, regardless of the `enabled` state.
       final [a, b] = mulMatch.groups([1, 2]);
-      sum += int.parse(a!) * int.parse(b!);
+      partOne += int.parse(a!) * int.parse(b!);
     }
   }
 
-  print('Sum: $sum');
+  print('Part one: $partOne');
+  print('Part two: $partTwo');
 }

@@ -1,8 +1,9 @@
-import 'package:adventofcode_2024/utilities.dart';
+import 'dart:io';
 
 Future<void> main() async {
   // 1. Read the input.
-  final lines = readFileAsLinesSync('assets/day_01_input');
+  final lines = File('assets/day_01_input') //
+      .readAsLinesSync();
 
   // 2. Create two lists, store the values in them.
   final (left, right) = (<int>[], <int>[]);
@@ -22,25 +23,25 @@ Future<void> main() async {
   right.sort();
 
   // 4. Loop through the lists, and sum the differences.
-  int totalDistance = 0;
+  int partOne = 0;
 
   for (int i = 0; i < left.length; i++) {
-    totalDistance += (left[i] - right[i]).abs();
+    partOne += (left[i] - right[i]).abs();
   }
 
   // 5. Print the result of part 1.
-  print('Total distance: $totalDistance');
+  print('Part one: $partOne');
 
   // 6. Loop through the lists, and determine the similarity.
-  int similarity = 0;
+  int partTwo = 0;
 
   for (int i = 0; i < left.length; i++) {
     final current = left[i];
     final count = right.where((a) => a == current).length;
 
-    similarity += current * count;
+    partTwo += current * count;
   }
 
   // 7. Print the result of part 2.
-  print('Similarity: $similarity');
+  print('Part two: $partTwo');
 }
