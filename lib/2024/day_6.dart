@@ -51,14 +51,15 @@ void main() {
 
     map.add(line);
 
-    // 3. Find the '^' character, which is the starting position.
-    final index = line.indexOf('^');
-    if (index != -1) {
-      position = (i, index);
+    for (int j = 0; j < line.length; j++) {
+      // Find the starting position.
+      if (line[j] == '^') {
+        position = (i, j);
+      }
     }
   }
 
-  // 3. Trace the path of the guard, and count the number of distinct positions.
+  // 3. Trace the path of the guard, and collect the visited positions.
   final visited = walk(map, position, Direction.up, {});
 
   print('Part one: ${visited.length}');
