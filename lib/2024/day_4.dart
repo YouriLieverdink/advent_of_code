@@ -38,7 +38,7 @@ enum Direction {
 
 void main() {
   // 1. Read the input file.
-  final lines = File('assets/2024/day_04_input') //
+  final lines = File('assets/2024/day_4_input') //
       .readAsLinesSync();
 
   // 2. Build a 2-dimensional array of characters.

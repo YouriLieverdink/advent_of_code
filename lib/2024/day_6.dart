@@ -39,7 +39,7 @@ enum Direction {
 
 void main() {
   // 1. Read the input.
-  final lines = File('assets/2024/day_06_input') //
+  final lines = File('assets/2024/day_6_input') //
       .readAsLinesSync();
 
   // 2. Make a map.

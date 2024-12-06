@@ -2,7 +2,7 @@ import 'dart:io';
 
 void main() {
   // 1. Read the input.
-  final lines = File('assets/2024/day_02_input') //
+  final lines = File('assets/2024/day_2_input') //
       .readAsLinesSync();
 
   // 2. Parse the input.
