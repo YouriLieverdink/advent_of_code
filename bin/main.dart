@@ -1,8 +1,8 @@
 import 'dart:io';
 
-void main(
+Future<void> main(
   List<String> args,
-) {
+) async {
   if (args.isEmpty || args.length != 2) {
     stdout.writeln('Usage: dart bin/main.dart <year> <day>.');
     exit(1);
@@ -16,13 +16,21 @@ void main(
     exit(1);
   }
 
-  final result = Process.runSync('dart', [file.path]);
-  if (result.exitCode != 0) {
-    stderr.write(result.stderr);
-    exit(1);
-  }
+  // Run the process, and time.
+  final stopwatch = Stopwatch();
+  stopwatch.start();
 
-  // Print the result of the script.
-  stdout.write(result.stdout);
-  exit(0);
+  final process = await Process.start('dart', [file.path]);
+
+  // Pipe the stdout and stderr.
+  await stdout.addStream(process.stdout);
+  await stderr.addStream(process.stderr);
+
+  // Wait for the process to exit.
+  final exitCode = await process.exitCode;
+
+  stopwatch.stop();
+  stdout.writeln('Time: ${stopwatch.elapsedMilliseconds}ms');
+
+  exit(exitCode);
 }

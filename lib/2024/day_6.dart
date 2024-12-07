@@ -1,29 +1,47 @@
 import 'dart:io';
 
+class Position {
+  final int x;
+  final int y;
+
+  const Position(this.y, this.x);
+
+  Position translate(
+    Direction direction,
+  ) {
+    switch (direction) {
+      case Direction.up:
+        return Position(y - 1, x);
+      case Direction.right:
+        return Position(y, x + 1);
+      case Direction.down:
+        return Position(y + 1, x);
+      case Direction.left:
+        return Position(y, x - 1);
+    }
+  }
+
+  @override
+  String toString() {
+    return '(i: $y, j: $x)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is Position && other.x == x && other.y == y;
+  }
+
+  @override
+  int get hashCode => x.hashCode ^ y.hashCode;
+}
+
 enum Direction {
   up,
   right,
   down,
   left;
 
-  (int, int) translate(
-    (int, int) position,
-  ) {
-    final (y, x) = position;
-
-    switch (this) {
-      case up:
-        return (y - 1, x);
-      case right:
-        return (y, x + 1);
-      case down:
-        return (y + 1, x);
-      case left:
-        return (y, x - 1);
-    }
-  }
-
-  Direction turnRight() {
+  Direction turn() {
     switch (this) {
       case up:
         return right;
@@ -37,69 +55,90 @@ enum Direction {
   }
 }
 
+const depth = 8192;
+
 void main() {
-  // 1. Read the input.
+  // Read the input.
   final lines = File('assets/2024/day_6_input') //
       .readAsLinesSync();
 
-  // 2. Make a map.
-  final List<String> map = [];
-  (int, int) position = (0, 0);
+  // Make a map.
+  final List<List<String>> map = [];
+  var start = Position(0, 0);
 
   for (int i = 0; i < lines.length; i++) {
     final line = lines[i];
 
-    map.add(line);
+    map.add(line.split(''));
 
+    // Find the starting position.
     for (int j = 0; j < line.length; j++) {
-      // Find the starting position.
       if (line[j] == '^') {
-        position = (i, j);
+        start = Position(i, j);
       }
     }
   }
 
-  // 3. Trace the path of the guard, and collect the visited positions.
-  final visited = walk(map, position, Direction.up, {});
+  final (visited, _) = trace(map, start, Direction.up, [], depth);
+  final unique = visited.toSet();
 
-  print('Part one: ${visited.length}');
+  print('Part one: ${unique.length}');
+
+  int partTwo = 0;
+
+  for (int i = 1; i < unique.length; i++) {
+    final position = unique.elementAt(i);
+
+    // Place an obstacle at this position, and see if it results in a loop.
+    map[position.y][position.x] = '#';
+
+    final (_, done) = trace(map, start, Direction.up, [], depth);
+    if (!done) {
+      partTwo++;
+    }
+
+    // Remove the obstacle.
+    map[position.y][position.x] = '.';
+  }
+
+  print('Part two: $partTwo');
 }
 
-Set<(int, int)> walk(
-  List<String> map,
-  (int, int) current,
-  Direction facing,
-  Set<(int, int)> visited,
+(List<Position>, bool) trace(
+  List<List<String>> map,
+  Position current,
+  Direction direction,
+  List<Position> $visited,
+  int depth,
 ) {
-  visited.add(current);
+  $visited.add(current);
 
-  final next = facing.translate(current);
+  final next = current.translate(direction);
+
+  if (depth <= 0) {
+    return ($visited, false);
+  }
 
   if (get(map, next) == null) {
-    // We've reached the end of the map, we're done.
-    return visited;
+    // We're out of bounds.
+    return ($visited, true);
   }
 
   if (get(map, next) == '#') {
-    // We've reached an obstacle, turn right, and continue walking.
-    final facing_ = facing.turnRight();
-    final next_ = facing_.translate(current);
-
-    return walk(map, next_, facing_, visited);
+    // We've hit an obstacle, turn, and continue.
+    return trace(map, current, direction.turn(), $visited, depth - 1);
   }
 
-  // Continue walking in the same direction.
-  return walk(map, next, facing, visited);
+  return trace(map, next, direction, $visited, depth - 1);
 }
 
+/// Retrieve a character from the [map] at the given [position].
 String? get(
-  List<String> map,
-  (int, int) position,
+  List<List<String>> map,
+  Position position,
 ) {
   try {
-    final (y, x) = position;
-
-    return map[y][x];
+    return map[position.y][position.x];
   } //
   on RangeError {
     return null;
